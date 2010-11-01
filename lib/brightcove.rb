@@ -12,7 +12,6 @@ require 'json'
   image
   cue_point
   logo_overlay
-  account
   service
   dto_maps
   dto_parser
@@ -25,19 +24,7 @@ end
 module Brightcove
 
   class << self
-    attr_accessor :read_token,
-      :write_token
-
-    def account
-      if @read_token.nil? || @write_token.nil?
-        raise Error, "Set Brightcove.read_token and Brightcove.write_token"
-      end
-      Account.new @read_token, @write_token
-    end
-
-    def service
-      Service.new account
-    end
+    attr_accessor :service
   end
 
 end

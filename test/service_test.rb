@@ -2,13 +2,18 @@ require File.dirname( __FILE__ ) + '/helper'
 
 class ServiceTest < BrightcoveTest
 
+  def test_invocation_without_token_raises
+    assert_raise RuntimeError do
+      Service.new.find_all_videos
+    end
+  end
+
   #
   # Read API
   #
 
   def test_invalid_token_raises_error
-    account = Account.new 'invalid_read_token'
-    service = Service.new account
+    service = Service.new :read_token => 'invalid_token'
 
     assert_raise Brightcove::APIError do
       service.find_all_videos

@@ -4,8 +4,17 @@ module Brightcove
   PORT = 80
 
   class Service
-    def initialize( account )
-      @account = account
+
+    attr_accessor :read_token,
+      :write_token
+
+    # == Options
+    # * read_token
+    # * write_token
+    #
+    def initialize( options = {} )
+      @read_token = options[ :read_token ]
+      @write_token = options[ :write_token ]
     end
 
     # == Params
@@ -73,10 +82,20 @@ module Brightcove
 
   private
 
+    def ensure_read_token
+      read_token ||
+        raise( "No read token" )
+    end
+
+    def ensure_write_token
+      write_token ||
+        raise( "No write token" )
+    end
+
     def invoke_write_api( method, params = {} )
       payload = {
         :method => method,
-        :params => params.merge( :token => @account.write_token )
+        :params => params.merge( :token => ensure_write_token )
       }.to_json
 
       body = http_post( "/services/post", 'json' => payload )
@@ -91,7 +110,7 @@ module Brightcove
     end
 
     def invoke_read_api( method, params = {} )
-      query = QueryString.build( @account.read_token, method, params )
+      query = QueryString.build( ensure_read_token, method, params )
 
       body = http_get( "/services/library?#{ query }" )
 

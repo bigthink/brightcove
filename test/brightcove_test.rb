@@ -7,11 +7,12 @@ class BrightcoveTest < Test::Unit::TestCase
 
   # enter Brightcove tokens to run tests
   def setup
-    Brightcove.read_token = nil
-    Brightcove.write_token = nil
+    tokens = {
+      :read_token => "",
+      :write_token => ""
+    }
 
-    @account = Brightcove.account
-    @service = Brightcove.service
+    @service = Brightcove.service = Service.new( tokens )
   end
 
   # Test::Unit requires at least one test in a test class
