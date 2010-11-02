@@ -58,7 +58,8 @@ module Brightcove
       [ 'remoteUrl', :remote_url, :string ],
       [ 'remoteStreamName', :remote_stream_name, :string ],
       [ 'videoDuration', :video_duration, :long ],
-      [ 'videoCodec', :video_codec, :string ]
+      [ 'videoCodec', :video_codec, :string ],
+      [ 'displayName', :display_name, :string ]
     ]
 
     CUE_POINT = [

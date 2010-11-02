@@ -10,7 +10,8 @@ module Brightcove
       :remote_url,
       :remote_stream_name,
       :video_duration,
-      :video_codec
+      :video_codec,
+      :display_name
   end
 
 end
