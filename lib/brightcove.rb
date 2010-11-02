@@ -1,6 +1,6 @@
 require 'rubygems'
 require 'cgi'
-require 'net/http'
+require 'net/https'
 require 'json'
 
 %w{

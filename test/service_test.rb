@@ -8,6 +8,28 @@ class ServiceTest < BrightcoveTest
     end
   end
 
+  def test_port_set_on_init
+    service = Service.new
+    assert_equal 80, service.port
+
+    service = Service.new :ssl => true
+    assert_equal 443, service.port
+
+    service = Service.new :ssl => false
+    assert_equal 80, service.port
+
+    service = Service.new :port => 81, :ssl => true
+    assert_equal 81, service.port
+  end
+
+  def test_host_set_on_init
+    service = Service.new
+    assert_equal Brightcove::Service::DEFAULT_HOST, service.host
+
+    service = Service.new :host => 'arbuckle'
+    assert_equal 'arbuckle', service.host
+  end
+
   #
   # Read API
   #

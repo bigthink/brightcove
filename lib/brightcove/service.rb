@@ -1,20 +1,29 @@
 module Brightcove
 
-  HOST = 'api.brightcove.com'
-  PORT = 80
-
   class Service
 
+    DEFAULT_HOST = 'api.brightcove.com'
+
     attr_accessor :read_token,
-      :write_token
+      :write_token,
+      :host,
+      :port,
+      :ssl
 
     # == Options
     # * read_token
     # * write_token
+    # * host (default "api.brightcove.com")
+    # * port (default 443 if ssl; 80 otherwise)
+    # * ssl (default true)
     #
     def initialize( options = {} )
       @read_token = options[ :read_token ]
       @write_token = options[ :write_token ]
+      @ssl = options[ :ssl ].nil? ? true : options[ :ssl ]
+      @host = options[ :host ] || DEFAULT_HOST
+      @port = options[ :port ] ||
+        ( ssl ? Net::HTTP.https_default_port : Net::HTTP.http_default_port )
     end
 
     # == Params
@@ -143,9 +152,11 @@ module Brightcove
     end
 
     def http_session
-      response = Net::HTTP.start( HOST, PORT ) do |session|
-        yield session
-      end
+      session = Net::HTTP.new( host, port )
+      session.use_ssl = ssl
+      session.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+      response = session.start { |session| yield session }
 
       unless response.is_a?( Net::HTTPOK )
         raise Error, "Server error: #{ http_response.code } #{ http_response.message }"
